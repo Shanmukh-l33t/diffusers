@@ -53,11 +53,16 @@ Running W8A8 on every step can produce visible flickering in multi-step video ge
 
 Image generation and few-step distilled checkpoints do not show that flickering, so Super-T2I and the distilled 4-step FP8 repos declare no schedule and stay W8A8 on every step. The schedule is also **ModelOpt FP8 only**: other quantization backends (for example TorchAO) keep their native forwards.
 
-Load the `fp8` revision with the same restore path as the [ModelOpt guide](../../quantization/modelopt) (`revision="fp8"` already carries the quantization config). Mixed precision then follows the checkpoint automatically:
+Load the `fp8` revision with the same restore path as the [ModelOpt guide](../../quantization/modelopt) (`revision="fp8"` already carries the quantization config): call `enable_huggingface_checkpointing()` before loading, so the checkpoint's quantized linears are restored in ModelOpt layout instead of plain `nn.Linear`, and import `modelopt.torch.quantization.backends.fp8_per_tensor_gemm` once to register the FP8 GEMM kernels that the first W8A8 step dispatches to (the [NVIDIA Cosmos cookbook](https://github.com/NVIDIA/cosmos/blob/fe9d22d601457ff491a3e3265a949083f9c562e3/cookbooks/cosmos3/generator/diffusers_cpu_offloading/cosmos3_streaming/fp8.py#L71-L80) does both). Skipping either fails the run: without the restore call, loading raises `no compatible serialized ModelOpt FP8 linears`; without the backend import, the first W8A8 step raises `RealQuantLinear: No real-quant GEMM found`. Mixed precision then follows the checkpoint automatically:
 
 ```python
 import torch
+
+import modelopt.torch.quantization.backends.fp8_per_tensor_gemm  # registers the FP8 GEMM kernels (import has no other effect)
 from diffusers import Cosmos3OmniPipeline
+from modelopt.torch.opt import enable_huggingface_checkpointing
+
+enable_huggingface_checkpointing()
 
 pipe = Cosmos3OmniPipeline.from_pretrained(
     "nvidia/Cosmos3-Nano",

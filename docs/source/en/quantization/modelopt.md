@@ -115,6 +115,8 @@ To load a serialized quantized model, use the [`~ModelMixin.from_pretrained`] me
 
 ```python
 import torch
+
+import modelopt.torch.quantization.backends.fp8_per_tensor_gemm  # registers the FP8 GEMM kernels (import has no other effect)
 from diffusers import AutoModel, NVIDIAModelOptConfig, SanaPipeline
 from modelopt.torch.opt import enable_huggingface_checkpointing
 
