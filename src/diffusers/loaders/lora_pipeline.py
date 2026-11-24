@@ -2308,16 +2308,16 @@ class AmusedLoraLoaderMixin(StableDiffusionLoraLoaderMixin):
         safe_serialization: bool = True,
     ):
         r"""
-        Save the LoRA parameters corresponding to the UNet and text encoder.
+        Save the LoRA parameters corresponding to the transformer and text encoder.
 
         Arguments:
             save_directory (`str` or `os.PathLike`):
                 Directory to save LoRA parameters to. Will be created if it doesn't exist.
-            unet_lora_layers (`dict[str, torch.nn.Module]` or `dict[str, torch.Tensor]`):
-                State dict of the LoRA layers corresponding to the `unet`.
             text_encoder_lora_layers (`dict[str, torch.nn.Module]` or `dict[str, torch.Tensor]`):
                 State dict of the LoRA layers corresponding to the `text_encoder`. Must explicitly pass the text
                 encoder LoRA state dict because it comes from 🤗 Transformers.
+            transformer_lora_layers (`dict[str, torch.nn.Module]` or `dict[str, torch.Tensor]`):
+                State dict of the LoRA layers corresponding to the `transformer`.
             is_main_process (`bool`, *optional*, defaults to `True`):
                 Whether the process calling this is the main process or not. Useful during distributed training and you
                 need to call this function on all processes. In this case, set `is_main_process=True` only on the main

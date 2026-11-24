@@ -650,7 +650,7 @@ class AltDiffusionPipeline(
         See https://github.com/google-research/vdm/blob/dc27b98a554f65cdc654b800da5aa1846545d41b/model_vdm.py#L298
 
         Args:
-            timesteps (`torch.Tensor`):
+            w (`torch.Tensor`):
                 generate embedding vectors at these timesteps
             embedding_dim (`int`, *optional*, defaults to 512):
                 dimension of the embeddings to generate
@@ -658,7 +658,7 @@ class AltDiffusionPipeline(
                 data type of the generated embeddings
 
         Returns:
-            `torch.Tensor`: Embedding vectors with shape `(len(timesteps), embedding_dim)`
+            `torch.Tensor`: Embedding vectors with shape `(len(w), embedding_dim)`
         """
         assert len(w.shape) == 1
         w = w * 1000.0

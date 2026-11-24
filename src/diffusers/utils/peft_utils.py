@@ -383,8 +383,8 @@ def check_peft_version(min_version: str) -> None:
     Checks if the version of PEFT is compatible.
 
     Args:
-        version (`str`):
-            The version of PEFT to check against.
+        min_version (`str`):
+            The minimum version of PEFT to check against.
     """
     if not is_peft_available():
         raise ValueError(f"PEFT is not installed. Please install it with `pip install -U '{deps['peft']}'`")
